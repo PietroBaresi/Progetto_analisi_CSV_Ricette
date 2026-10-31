@@ -7,22 +7,38 @@ def carica(nomefile):
     """Legge il file, converte i numeri, scarta le righe sporche.
     Restituisce la lista delle righe buone e il numero di righe scartate."""
 
+    dati_buoni = []
+    righe_scartate = 0
+
     with open(nomefile, "r", encoding="utf-8", newline="") as f:
          for ricetta in csv.DictReader(f):
-             if ricetta["calories"] == "NA" or ricetta["calories"].strip() == "":
-                righe_scartate = righe_scartate + 1
-        
-        try:
-            ricetta_pulita = {
-                    "name": ricetta["name"],
-                    "country": ricetta["country"],
-                    "calories": int(ricetta["calories"]),
-                    "avg_rating": float(ricetta["avg_rating"]) if ricetta["avg_rating"] != "NA" else None,
-                    "prep_time": int(ricetta["prep_time"]),
-                    "cook_time": int(ricetta["cook_time"]),
-                    "total_time": int(ricetta["total_time"])
-                }
-                dati_buoni.append(ricetta_pulita)
+             try:
+                 if ricetta["calories"] == "NA" or ricetta["calories"].strip() == "":
+                     righe_scartate = righe_scartate + 1
+                     continue
+                 
+                 if ricetta["avg_rating"] == "NA" or ricetta["avg_rating"].strip() == "":
+                     voto = None
+                 else:
+                     voto = float(ricetta["avg_rating"])
+                
+                 ricetta_pulita = {
+                     "name": ricetta["name"],
+                     "country": ricetta["country"],
+                     "calories": int(ricetta["calories"]),
+                     "avg_rating": voto,
+                     "total_time": int(ricetta["total_time"]),
+                     "ingredients": ricetta["ingredients"]
+                 }
+                 
+                 
+                 dati_buoni.append(ricetta_pulita)
+                 
+             except ValueError:
+                 
+                 righe_scartate = righe_scartate + 1
+
+    return dati_buoni, righe_scartate
 
 
 def domanda1(dati):
