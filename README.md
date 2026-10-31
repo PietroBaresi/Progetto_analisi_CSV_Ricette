@@ -10,7 +10,7 @@ Sì, la prima riga è l'intestazione. Contiene i nomi dei campi.
 </p>
 <h3>Quante colonne? Quali vi servono per le domande?</h3>
 <p> Ci sono 17 colonne.
-Per le domande ci servono solo 4 di queste colonne: lo Stato, le calorie, il voto medio, il tempo totale.
+Per le domande ci servono solo 5 di queste colonne: lo Stato, le calorie, il voto medio, il tempo totale e il numero totale di ingredienti.
 </p>
 <h3>Trovate almeno un valore mancante o strano. Com'è scritto?</h3>
 <p>Sì troviamo dei valori strani, per esempio NA che il valore manca.
