@@ -2,49 +2,55 @@ import csv
 
 FILE = "dati/ricette-cucine-del-mondo.csv"
 
-
 def carica(nomefile):
-    """Legge il file, converte i numeri, scarta le righe sporche.
-    Restituisce la lista delle righe buone e il numero di righe scartate."""
-
-    dati_buoni = []
-    righe_scartate = 0
-
+    """Legge il file, converte i numeri, scarta le righe sporche. Restituisce la lista delle righe buone e il numero di righe scartate."""
+    buone = []
+    scartate = 0
+    
     with open(nomefile, "r", encoding="utf-8", newline="") as f:
-         for ricetta in csv.DictReader(f):
-             try:
-                 if ricetta["calories"] == "NA" or ricetta["calories"].strip() == "":
-                     righe_scartate = righe_scartate + 1
-                     continue
-                 
-                 if ricetta["avg_rating"] == "NA" or ricetta["avg_rating"].strip() == "":
-                     voto = None
-                 else:
-                     voto = float(ricetta["avg_rating"])
+        lettore = csv.DictReader(f)
+        
+        for riga in lettore:
+            if not riga.get("name") or not riga.get("country"):
+                scartate += 1
+                continue
+
+            
+            try:
+                riga["calories"] = int(riga["calories"])
+            except (ValueError, TypeError):
+                riga["calories"] = None
                 
-                 ricetta_pulita = {
-                     "name": ricetta["name"],
-                     "country": ricetta["country"],
-                     "calories": int(ricetta["calories"]),
-                     "avg_rating": voto,
-                     "total_time": int(ricetta["total_time"]),
-                     "ingredients": ricetta["ingredients"]
-                 }
-                 
-                 
-                 dati_buoni.append(ricetta_pulita)
-                 
-             except ValueError:
-                 
-                 righe_scartate = righe_scartate + 1
-
-    return dati_buoni, righe_scartate
-
+            
+            try:
+                riga["avg_rating"] = float(riga["avg_rating"].replace(",", "."))
+            except (ValueError, TypeError):
+                riga["avg_rating"] = None
+                
+           
+            try:
+                riga["total_time"] = int(riga["total_time"])
+            except (ValueError, TypeError):
+                riga["total_time"] = None
+                
+            buone.append(riga)
+            
+    return buone, scartate
 
 def domanda1(dati):
     """Risponde alla domanda 1 della scheda."""
-    return None
-
+    cucine = set()
+    senza_calorie = 0
+    senza_voto = 0
+    
+    for riga in dati:
+        cucine.add(riga["country"])
+        if riga["calories"] is None:
+            senza_calorie += 1
+        if riga["avg_rating"] is None:
+            senza_voto += 1
+            
+    return f"Ricette totali: {len(dati)}, Cucine: {len(cucine)}, Senza calorie: {senza_calorie}, Senza voto: {senza_voto}"
 
 def domanda2(dati):
     """Risponde alla domanda 2."""
@@ -66,15 +72,13 @@ def scrivi_risultati(nomefile, intestazione, tabella):
     """Scrive la tabella in un CSV con csv.writer."""
     pass
 
-
 def main():
     dati, scartate = carica(FILE)
     print(f"Righe buone: {len(dati)}, scartate: {scartate}")
     print("Domanda 1:", domanda1(dati))
     print("Domanda 2:", domanda2(dati))
     tabella = domanda3(dati)
-    scrivi_risultati("risultati.csv", ["colonna1", "colonna2"], tabella)
+    scrivi_risultati("risultati.csv", ["cucina", "numero_ricette", "voto_medio"], tabella)
     print("Domanda nostra:", domanda_nostra(dati))
-
 
 main()
