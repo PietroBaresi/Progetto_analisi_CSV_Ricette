@@ -54,7 +54,27 @@ def domanda1(dati):
 
 def domanda2(dati):
     """Risponde alla domanda 2."""
-    return None
+    tempi_validi = [r for r in dati if r["total_time"] is not None and r["total_time"] > 0]
+   
+    if not tempi_validi:
+        return "Nessun tempo valido trovato"
+       
+    ricetta_minima = min(tempi_validi, key=lambda x: x["total_time"])
+    ricetta_massima = max(tempi_validi, key=lambda x: x["total_time"])
+   
+    media_minuti = sum(r["total_time"] for r in tempi_validi) / len(tempi_validi)
+   
+    ore_max = ricetta_massima["total_time"] // 60
+    minuti_max = ricetta_massima["total_time"] % 60
+    tempo_max_formattato = f"{ore_max} ore e {minuti_max} minuti"
+   
+    superano_24h = sum(1 for r in tempi_validi if r["total_time"] > 1440)
+   
+    return (f"Minimo: {ricetta_minima['total_time']} min, "
+            f"Massimo: {tempo_max_formattato} ({ricetta_massima['name']}), "
+            f"Media: {round(media_minuti, 2)} min, "
+            f"Oltre 24 ore: {superano_24h}")
+ 
 
 
 def domanda3(dati):
