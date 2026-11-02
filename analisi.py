@@ -103,21 +103,21 @@ def domanda2(dati):
 
 def domanda3(dati):    
     """Risponde alla domanda 3. Calcola la media dei voti per ogni cucina."""
-    somme = {}    
+    somma = {}    
     conteggi = {}          
    
     for riga in dati:        
         if riga["avg_rating"] is not None:            
             cucina = riga["country"]                          
-            if cucina not in somme:                
-                somme[cucina] = 0.0                
+            if cucina not in somma:                
+                somma[cucina] = 0.0                
                 conteggi[cucina] = 0                            
-            somme[cucina] = somme[cucina] + riga["avg_rating"]            
+            somma[cucina] = somma[cucina] + riga["avg_rating"]            
             conteggi[cucina] = conteggi[cucina] + 1
        
     tabella_risultati = []    
-    for cucina in somme:        
-        voto_medio = somme[cucina] / conteggi[cucina]        
+    for cucina in somma:        
+        voto_medio = somma[cucina] / conteggi[cucina]        
         voto_arrotondato = round(voto_medio, 2)        
         tabella_risultati.append([voto_arrotondato, cucina, conteggi[cucina]])              
        
@@ -127,6 +127,7 @@ def domanda3(dati):
     for riga in tabella_risultati:
         tabella_finale.append([riga[1], riga[2], riga[0]])
        
+
     return tabella_finale
  
  
