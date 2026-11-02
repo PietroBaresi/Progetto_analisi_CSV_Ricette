@@ -52,27 +52,51 @@ def domanda1(dati):
             
     return f"Ricette totali: {len(dati)}, Cucine: {len(cucine)}, Senza calorie: {senza_calorie}, Senza voto: {senza_voto}"
 
+
+
 def domanda2(dati):
-    """Risponde alla domanda 2."""
-    tempi_validi = [r for r in dati if r["total_time"] is not None and r["total_time"] > 0]
+    """Risponde alla domanda 2 usando cicli standard senza funzioni avanzate."""
+    tempi_validi = []
+    for r in dati:
+        if r["total_time"] is not None:
+            if r["total_time"] > 0:
+                tempi_validi.append(r)
    
-    if not tempi_validi:
+    if len(tempi_validi) == 0:
         return "Nessun tempo valido trovato"
        
-    ricetta_minima = min(tempi_validi, key=lambda x: x["total_time"])
-    ricetta_massima = max(tempi_validi, key=lambda x: x["total_time"])
+    ricetta_minima = tempi_validi[0]
+    ricetta_massima = tempi_validi[0]
+    somma_tempi = 0
+    superano_24h = 0
    
-    media_minuti = sum(r["total_time"] for r in tempi_validi) / len(tempi_validi)
+    for riga in tempi_validi:
+       
+        somma_tempi = somma_tempi + riga["total_time"]
+             
+        if riga["total_time"] < ricetta_minima["total_time"]:
+            ricetta_minima = riga
+                
+        if riga["total_time"] > ricetta_massima["total_time"]:
+            ricetta_massima = riga
+           
+        if riga["total_time"] > 1440:
+            superano_24h = superano_24h + 1
    
-    ore_max = ricetta_massima["total_time"] // 60
-    minuti_max = ricetta_massima["total_time"] % 60
+    media_minuti = somma_tempi / len(tempi_validi)
+    media_arrotondata = round(media_minuti, 2)
+   
+    tempo_max = ricetta_massima["total_time"]
+    ore_max = tempo_max // 60
+    minuti_max = tempo_max % 60
     tempo_max_formattato = f"{ore_max} ore e {minuti_max} minuti"
    
-    superano_24h = sum(1 for r in tempi_validi if r["total_time"] > 1440)
+    nome_max = ricetta_massima["name"]
+    minimo_valore = ricetta_minima["total_time"]
    
-    return (f"Minimo: {ricetta_minima['total_time']} min, "
-            f"Massimo: {tempo_max_formattato} ({ricetta_massima['name']}), "
-            f"Media: {round(media_minuti, 2)} min, "
+    return (f"Minimo: {minimo_valore} min, "
+            f"Massimo: {tempo_max_formattato} ({nome_max}), "
+            f"Media: {media_arrotondata} min, "
             f"Oltre 24 ore: {superano_24h}")
  
 
