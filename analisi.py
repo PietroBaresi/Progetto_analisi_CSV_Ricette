@@ -164,8 +164,13 @@ def domanda_nostra(dati):
 
 
 def scrivi_risultati(nomefile, intestazione, tabella):
-    """Scrive la tabella in un CSV con csv.writer."""
-    pass
+    """Scrive la tabella in un file CSV riga per riga."""
+    with open(nomefile, "w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(intestazione)
+        for riga in tabella:
+            w.writerow(riga)
+ 
 
 def main():
     dati, scartate = carica(FILE)
