@@ -134,7 +134,33 @@ def domanda3(dati):
 
 def domanda_nostra(dati):
     """La domanda inventata dal gruppo."""
-    return None
+    """Le ricette molto veloci (quelle che richiedono al massimo 20 minuti) hanno voti più bassi o più alti rispetto a quelle che richiedono una preparazione più lunga?"""
+    somma_veloci = 0.0
+    contatore_veloci = 0
+    
+    somma_lunghe = 0.0
+    contatore_lunghe = 0
+    
+    for r in dati:
+        if r["total_time"] is not None:
+            if r["avg_rating"] is not None:
+                if r["total_time"] <= 20:
+                    if r["total_time"] > 0:
+                        somma_veloci = somma_veloci + r["avg_rating"]
+                        contatore_veloci = contatore_veloci + 1
+                else:
+                    somma_lunghe = somma_lunghe + r["avg_rating"]
+                    contatore_lunghe = contatore_lunghe + 1
+    
+    media_veloci = 0
+    if contatore_veloci > 0:
+        media_veloci = round(somma_veloci / contatore_veloci, 2)
+        
+    media_lunghe = 0
+    if contatore_lunghe > 0:
+        media_lunghe = round(somma_lunghe / contatore_lunghe, 2)
+    
+    return f"Media ricette veloci: {media_veloci} | Media ricette lunghe: {media_lunghe}"
 
 
 def scrivi_risultati(nomefile, intestazione, tabella):
