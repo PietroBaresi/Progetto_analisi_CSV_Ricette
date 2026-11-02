@@ -101,11 +101,35 @@ def domanda2(dati):
  
 
 
-def domanda3(dati):
-    """Risponde alla domanda 3. Restituisce la tabella
-    che finirà in risultati.csv: una lista di righe."""
-    return []
-
+def domanda3(dati):    
+    """Risponde alla domanda 3. Calcola la media dei voti per ogni cucina."""
+    somme = {}    
+    conteggi = {}          
+   
+    for riga in dati:        
+        if riga["avg_rating"] is not None:            
+            cucina = riga["country"]                          
+            if cucina not in somme:                
+                somme[cucina] = 0.0                
+                conteggi[cucina] = 0                            
+            somme[cucina] = somme[cucina] + riga["avg_rating"]            
+            conteggi[cucina] = conteggi[cucina] + 1
+       
+    tabella_risultati = []    
+    for cucina in somme:        
+        voto_medio = somme[cucina] / conteggi[cucina]        
+        voto_arrotondato = round(voto_medio, 2)        
+        tabella_risultati.append([voto_arrotondato, cucina, conteggi[cucina]])              
+       
+    tabella_risultati.sort(reverse=True)    
+   
+    tabella_finale = []
+    for riga in tabella_risultati:
+        tabella_finale.append([riga[1], riga[2], riga[0]])
+       
+    return tabella_finale
+ 
+ 
 
 def domanda_nostra(dati):
     """La domanda inventata dal gruppo."""
